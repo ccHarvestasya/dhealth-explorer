@@ -1,0 +1,33 @@
+{
+	"apiNodePort": 3001,
+	"endpoints": {
+		"marketData": "",
+		"statisticsService": "https://tools2.harvestasya.com:4202"
+	},
+	"networkConfig": {
+		"namespaceName": "dhealth.dhp",
+		"namespaceId": "39E0C49FA322A459",
+		"divisibility": "6"
+	},
+	"footer": {
+		"link": [
+			{
+				"href": "https://github.com/dhealthproject",
+				"text": "Github",
+				"icon": "IconGithub"
+			},
+			{
+				"href": "https://discord.com/invite/3mwnCbh3",
+				"text": "Discord",
+				"icon": "IconDiscord"
+			},
+			{
+				"href": "https://twitter.com/dHealth_Network",
+				"text": "Twitter",
+				"icon": "IconTwitter"
+			}
+		]
+	},
+	"timezone": "Local"
+}
+

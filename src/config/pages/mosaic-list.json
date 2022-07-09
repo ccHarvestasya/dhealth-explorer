@@ -1,0 +1,35 @@
+{
+    "path": "/mosaics",
+    "name": "mosaics",
+    "meta": {
+        "group": "list-page",
+        "keepAliveGoTo": ["detail-page"]
+    },
+    "props": {
+        "layout": "flex",
+        "storeNamespaces": ["mosaic"],
+        "schema": [
+            {
+                "layoutOptions": "full-width",
+                "type": "CardTable",
+                "title": "mosaicsTitle",
+                "managerGetter": "mosaic/timeline",
+                "errorMessage": "Failed to fetch mosaic list",
+				"pagination": "server",
+                "fields": [
+                    "mosaicId",
+                    "mosaicAliasNames",
+                    "ownerAddress",
+                    "relativeAmount",
+                    "mosaicFlags"
+                ],
+                "mobileFields": [
+                    "mosaicId",
+                    "mosaicAliasNames",
+                    "ownerAddress",
+                    "mosaicFlags"
+                ]
+            }
+        ]
+    }
+}
