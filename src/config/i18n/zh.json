@@ -9,7 +9,7 @@
     "relativeAmount": "相对金额",
     "height": "高度",
     "fee": "费用",
-    "maxFee": "Fee",
+    "maxFee": "最大费用",
     "totalFee": "Total Fee",
     "date": "日期",
     "deadline": "截止时间",
@@ -413,5 +413,6 @@
     "lastEpoch": "Last Epoch",
     "currentEpoch": "Current Epoch",
     "value": "值",
-    "blockReward": "Block Reward"
+    "blockReward": "Block Reward",
+    "accountLabel": "Label"
 }

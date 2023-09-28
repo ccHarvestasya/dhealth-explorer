@@ -18,12 +18,12 @@
 
 import Lock from './lock';
 import {
-	Pagination,
 	DataSet,
-	getStateFromManagers,
+	Pagination,
+	getActionsFromManagers,
 	getGettersFromManagers,
 	getMutationsFromManagers,
-	getActionsFromManagers
+	getStateFromManagers
 } from './manager';
 import { filters } from '../config';
 import { NodeService, StatisticService } from '../infrastructure';
@@ -31,7 +31,7 @@ import { NodeService, StatisticService } from '../infrastructure';
 const managers = [
 	new Pagination({
 		name: 'timeline',
-		fetchFunction: (pageInfo, filterValue) => NodeService.getNodePeerList(filterValue),
+		fetchFunction: (pageInfo, filterValue) => NodeService.getAvailableNodeList(filterValue),
 		filter: filters.nodeRoles
 	}),
 	new DataSet(

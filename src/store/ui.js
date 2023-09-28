@@ -17,7 +17,7 @@
  */
 import { i18n, keyRedirects } from '../config';
 import helper from '../helper';
-import { NamespaceService, MosaicService, AccountService } from '../infrastructure';
+import { AccountService, MosaicService, NamespaceService } from '../infrastructure';
 import http from '../infrastructure/http';
 import router from '../router';
 import { Address } from 'symbol-sdk';
@@ -103,7 +103,7 @@ export default {
 		search: ({ dispatch, rootGetters }, _searchString) => {
 			return new Promise(async (resolve, reject) => {
 				if (null !== _searchString && '' !== _searchString) {
-					const searchString = _searchString.replace(/\s|-/g, '');
+					const searchString = _searchString.replace(/\s/g, '');
 					if (helper.isBlockHeight(searchString)) {
 						dispatch('openPage', {
 							pageName: 'block',

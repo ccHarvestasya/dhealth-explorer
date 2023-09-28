@@ -1,13 +1,13 @@
 import Constants from '../config/constants';
 import {
-	TransactionType,
-	TransactionGroup,
-	AliasType,
-	NamespaceRegistrationType,
 	AccountOrderBy,
+	AliasType,
 	MetadataType,
 	MosaicRestrictionEntryType,
-	ReceiptType
+	NamespaceRegistrationType,
+	ReceiptType,
+	TransactionGroup,
+	TransactionType
 } from 'symbol-sdk';
 
 const customTransactionReceiptFilter = {
@@ -182,17 +182,17 @@ export const transaction = [
 
 export const account = [
 	{
-		label: 'Recent',
-		icon: 'mdi-clock-outline',
-		value: {}
-	},
-	{
 		label: 'Rich List',
 		icon: 'mdi-cash',
 		value: {
 			orderBy: AccountOrderBy.Balance,
 			mosaicId: ''
 		}
+	},
+	{
+		label: 'Recent',
+		icon: 'mdi-clock-outline',
+		value: {}
 	}
 ];
 
@@ -239,14 +239,14 @@ export const metadata = [
 		value: {}
 	},
 	{
-		label: 'Address Alias',
+		label: 'Account',
 		icon: 'mdi-account',
 		value: {
 			metadataType: MetadataType.Account
 		}
 	},
 	{
-		label: 'Mosaic Alias',
+		label: 'Mosaic',
 		icon: 'mdi-circle',
 		value: {
 			metadataType: MetadataType.Mosaic

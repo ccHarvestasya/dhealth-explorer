@@ -1,13 +1,14 @@
 import {
-	NetworkType,
 	Account,
-	NamespaceId,
-	SHA3Hasher,
 	Crypto,
 	Mosaic,
-	UInt64,
 	MosaicId,
-	TransactionInfo
+	NamespaceId,
+	NetworkType,
+	SHA3Hasher,
+	TransactionInfo,
+	TransactionType,
+	UInt64
 } from 'symbol-sdk';
 
 const generateRandomHash = (length = 32) => {
@@ -17,6 +18,35 @@ const generateRandomHash = (length = 32) => {
 		.update(seed)
 		.hex()
 		.toUpperCase();
+};
+
+const transactionCommonField = {
+	deadline: {
+		adjustedValue: 8266897456
+	},
+	maxFee: UInt64.fromUint(1000000),
+	networkType: NetworkType.TEST_NET,
+	payloadSize: 176,
+	signature: generateRandomHash(64),
+	signer: {
+		address: Account.generateNewAccount(NetworkType.TEST_NET).address
+	},
+	version: 1,
+	transactionInfo: {
+		index: 1,
+		id: 1,
+		height: 198327,
+		timestamp: 1646063763,
+		feeMultiplier: 10,
+		hash: generateRandomHash()
+	}
+};
+
+const receiptCommonField = {
+	amount: UInt64.fromUint(10000000),
+	height: UInt64.fromUint(1000),
+	mosaicId: new MosaicId('6BED913FA20223F8'),
+	version: 1
 };
 
 const TestHelper = {
@@ -208,21 +238,11 @@ const TestHelper = {
 	 * @param {number} blockHeight block height.
 	 * @returns {object} transaction.
 	 */
-	mockTransaction: blockHeight => {
+	mockTransaction: ({height, timestamp}) => {
 		return {
-			deadline: {
-				adjustedValue: 8266897456
-			},
-			maxFee: UInt64.fromUint(1000000),
-			type: 16724,
-			networkType: NetworkType.TEST_NET,
-			version: 1,
-			transactionInfo: new TransactionInfo(UInt64.fromUint(blockHeight), 1, 1, generateRandomHash()),
-			payloadSize: 176,
-			signature: generateRandomHash(64),
-			signer: {
-				address: Account.generateNewAccount(NetworkType.TEST_NET).address
-			},
+			...transactionCommonField,
+			type: TransactionType.TRANSFER,
+			transactionInfo: new TransactionInfo(height, 1, 1, timestamp, 10, generateRandomHash()),
 			recipientAddress: {
 				address: Account.generateNewAccount(NetworkType.TEST_NET).address
 			},
@@ -245,6 +265,152 @@ const TestHelper = {
 			type: 20803,
 			version: 1
 		};
+	},
+	mockMosaicSupplyRevocationTransaction: mosaic => {
+		return {
+			...transactionCommonField,
+			mosaic,
+			sourceAddress: Account.generateNewAccount(NetworkType.TEST_NET).address,
+			type: TransactionType.MOSAIC_SUPPLY_REVOCATION,
+			version: 1
+		};
+	},
+	mockSecretLockTransaction: mosaic => {
+		return {
+			...transactionCommonField,
+			mosaic,
+			hashAlgorithm: 0,
+			duration: UInt64.fromUint(10),
+			type: TransactionType.SECRET_LOCK,
+			recipientAddress: {
+				address: Account.generateNewAccount(NetworkType.TEST_NET).address
+			},
+			secret: 'FFF86D517ACFBCD86229CBDCECF9E7F777EF0B5FB54B15D794C68C33942A09D8'
+		};
+	},
+	mockLockFundsTransaction: () => {
+		return {
+			...transactionCommonField,
+			duration: UInt64.fromUint(10),
+			hash: '5547B43ECBCA8C90114BBD2C741D609719A0C61C7B03049125521ECE2415E376',
+			mosaic: new Mosaic(new MosaicId('6BED913FA20223F8'), UInt64.fromUint(10)),
+			type: TransactionType.HASH_LOCK
+		};
+	},
+	createFormattedHashLockTransaction: status => {
+		return {
+			amount: UInt64.fromUint(10000000),
+			endHeight: 10,
+			hash: generateRandomHash(64),
+			mosaicId: new MosaicId('6BED913FA20223F8'),
+			ownerAddress: Account.generateNewAccount(NetworkType.TEST_NET).address.plain(),
+			recordId: '631FA269464297FBEBEFE0ED',
+			status,
+			version: 1
+		};
+	},
+	createFormattedSecretLockTransaction: (mosaicIdHex, amount, status) => {
+		return {
+			amount: UInt64.fromUint(amount),
+			compositeHash: generateRandomHash(64),
+			hashAlgorithm: 'Sha3 256',
+			endHeight: 10,
+			mosaicId: new MosaicId(mosaicIdHex),
+			ownerAddress: Account.generateNewAccount(NetworkType.TEST_NET).address.plain(),
+			recipient: Account.generateNewAccount(NetworkType.TEST_NET).address.plain(),
+			recordId: '631FA269464297FBEBEFE0ED',
+			secret: '112233445566',
+			status,
+			version: 1
+		};
+
+	},
+	mockBalanceChangeReceipt: (amount, mosaicIdHex, type) => {
+		return {
+			...receiptCommonField,
+			amount: UInt64.fromUint(amount),
+			mosaicId: new MosaicId(mosaicIdHex),
+			targetAddress: Account.generateNewAccount(NetworkType.TEST_NET).address,
+			type
+		};
+	},
+	mockBalanceTransferReceipt: (amount, type) => {
+		return {
+			...receiptCommonField,
+			amount: UInt64.fromUint(amount),
+			recipientAddress: Account.generateNewAccount(NetworkType.TEST_NET).address,
+			senderAddress: Account.generateNewAccount(NetworkType.TEST_NET).address,
+			type
+		};
+	},
+	mockInflationReceipt: () => {
+		return {
+			...receiptCommonField,
+			type: 20803
+		};
+	},
+	mockArtifactExpiryReceipt: (artifactId, type) => {
+		return {
+			artifactId,
+			height: UInt64.fromUint(1000),
+			version: 1,
+			type
+		};
+	},
+	createPartialAggregateTransaction: (cosignatures = [], innerTransactions = []) => {
+		return {
+			...transactionCommonField,
+			type: TransactionType.AGGREGATE_BONDED,
+			cosignatures,
+			innerTransactions
+		};
+	},
+	generateNodePeerStatus: isAvailable => {
+		return {
+			isAvailable,
+			lastStatusCheck: 1676809816662
+		};
+	},
+	generateNodeApiStatus: isAvailable => {
+		return {
+			isAvailable,
+			nodePublicKey: '4DA6FB57FA168EEBBCB68DA4DDC8DA7BCF41EC93FB22A33DF510DB0F2670F623',
+			chainHeight: 2027193,
+			finalization: {
+				height: 2031992,
+				epoch: 1413,
+				point: 7,
+				hash: '6B687D9B689611C90A1094A7430E78914F22A2570C80D3E42D520EB08091A973'
+			},
+			nodeStatus: {
+				apiNode: 'up',
+				db: 'up'
+			},
+			restVersion: '2.4.2',
+			restGatewayUrl: 'localhost.com',
+			isHttpsEnabled: true
+		};
+	},
+	nodeCommonField: {
+		version: 16777989,
+		publicKey: '016DC1622EE42EF9E4D215FA1112E89040DD7AED83007283725CE9BA550272F5',
+		networkGenerationHashSeed: '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6',
+		port: 7900,
+		networkIdentifier: 104,
+		host: 'node.com',
+		friendlyName: 'node',
+		lastAvailable: '2023-02-19T12:36:04.524Z',
+		hostDetail: {},
+		location: '',
+		ip: '127.0.0.1',
+		organization: '',
+		as: '',
+		continent: '',
+		country: '',
+		region: '',
+		city: '',
+		district: '',
+		zip: ''
 	}
 };
 

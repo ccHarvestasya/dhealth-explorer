@@ -3,6 +3,92 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [v1.2.3][v1.2.3] - 8-Sep-2023
+Package  | Version  | Link
+---|---|---
+REST Core| v2.4.2 | catapult-rest
+SDK Core| v2.0.3 | symbol-sdk
+
+[Bug] [#1191](https://github.com/symbol/explorer/pull/1191): Fix account balance widget container overflow issue
+
+## [v1.2.2][v1.2.2] - 22-Aug-2023
+Package  | Version  | Link
+---|---|---
+REST Core| v2.4.2 | catapult-rest
+SDK Core| v2.0.3 | symbol-sdk
+
+[Bug] [#1188](https://github.com/symbol/explorer/pull/1188): Remove address hyphens in account balance
+
+[Update] [#1189](https://github.com/symbol/explorer/pull/1189): Update Jenkinsfile to the latest format
+
+## [v1.2.1][v1.2.1] - 16-May-2023
+Package  | Version  | Link
+---|---|---
+REST Core| v2.4.2 | catapult-rest
+SDK Core| v2.0.3 | symbol-sdk
+
+[Bug] [#1146](https://github.com/symbol/explorer/issues/1146): Fix search namespace without dash.
+
+[Bug] [#1167](https://github.com/symbol/explorer/pull/1167): Fix the peer node loading issue in the node list page.
+
+[Update] [#1183](https://github.com/symbol/explorer/pull/1183): Account listing default display rich list
+
+## [v1.2.0][v1.2.0] - 26-Oct-2022
+Package  | Version  | Link
+---|---|---
+REST Core| v2.4.2 | catapult-rest
+SDK Core| v2.0.3 | symbol-sdk
+
+[Bug] [#1015](https://github.com/symbol/explorer/issues/1015): Fix UI bug for restriction display issue.
+
+[Bug] [#1027](https://github.com/symbol/explorer/issues/1027): Fix display big aggregate transaction problem.
+
+[Bug] [#1039](https://github.com/symbol/explorer/issues/1039): Fix horizontal scroll css issue in listing page.
+
+[Performance] [#1040](https://github.com/symbol/explorer/issues/1040): minor performance improvement for the transaction detail page, as we remove hash lock section for all transaction type expect aggregate bonded.
+
+[Bug] [#1109](https://github.com/symbol/explorer/pull/1109): Fix mosaics missing in receipts section.
+
+[Bug] [#1110](https://github.com/symbol/explorer/issues/1110): Resolved errors in chrome console.
+
+[Feature] [#1111](https://github.com/symbol/explorer/pull/1111): Apply eslint rules in tests folder.
+
+[Bug] [#1122](https://github.com/symbol/explorer/issues/1122): Update config and rename filter in metadata section.
+
+[Feature] [#1130](https://github.com/symbol/explorer/issues/1130): Display max / effective fee based on transaction status.
+
+## [v1.1.7][v1.1.7] - 25-Oct-2022
+Package  | Version  | Link
+---|---|---
+REST Core| v2.4.2 | catapult-rest
+SDK Core| v2.0.3 | symbol-sdk
+
+[Feature]: We update symbol-SDK v2.0.3.
+
+## [v1.1.6][v1.1.6] - 17-Jun-2022
+Package  | Version  | Link
+---|---|---
+REST Core| v2.4.0 | catapult-rest
+SDK Core| v2.0.1 | symbol-sdk
+
+[Bug] [#906](https://github.com/symbol/explorer/issues/906): Ctrl + click on any transaction link is working now.
+
+[Bug] [#1051](https://github.com/symbol/explorer/issues/1051): Fix invalid XYM amount display when XYM sent together with namespace alias and mosaic id.
+
+[Bug] [#1052](https://github.com/symbol/explorer/issues/1052): Removed senseless voting key address in the voting key section.
+
+[Feature] [#1055](https://github.com/symbol/explorer/pull/1055): We added a copy button beside the address on the listing page.
+
+[Feature] [#1056](https://github.com/symbol/explorer/pull/1056): We added the account label on the account listing page.
+
+[Feature] [#1057](https://github.com/symbol/explorer/pull/1057): Dependabot and auto-merge are up.
+
+[Performance] [#1068](https://github.com/symbol/explorer/pull/1068): Performance improvement for the transaction list page, reduce block requests to obtain timestamp.
+
+[Feature] [#1070](https://github.com/symbol/explorer/pull/1070): Explorer will display the local timezone now.
+
+[Bug] [#1101](https://github.com/symbol/explorer/pull/1101): Fix display wrong native namespace expiration.
+
 ## [v1.1.5][v1.1.5] - 23-Apr-2022
 
 Package  | Version  | Link
@@ -482,3 +568,9 @@ SDK Core| v0.20.7 | symbol-sdk
 [v1.1.3]: https://github.com/symbol/explorer/releases/tag/v1.1.3
 [v1.1.4]: https://github.com/symbol/explorer/releases/tag/v1.1.4
 [v1.1.5]: https://github.com/symbol/explorer/releases/tag/v1.1.5
+[v1.1.6]: https://github.com/symbol/explorer/releases/tag/v1.1.6
+[v1.1.7]: https://github.com/symbol/explorer/releases/tag/v1.1.7
+[v1.2.0]: https://github.com/symbol/explorer/releases/tag/v1.2.0
+[v1.2.1]: https://github.com/symbol/explorer/releases/tag/v1.2.1
+[v1.2.2]: https://github.com/symbol/explorer/releases/tag/v1.2.2
+[v1.2.3]: https://github.com/symbol/explorer/releases/tag/v1.2.3

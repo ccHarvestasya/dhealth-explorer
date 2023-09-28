@@ -291,7 +291,7 @@
     "aggregateCosignaturesError": "Соподписанты отсутствуют.",
     "accountBalanceTitle": "Account Balance",
     "noAlias": "No alias",
-    "addressBeenCopied": "The address was copied to the clipboard",
+    "addressHasBeenCopied": "The address was copied to the clipboard",
     "failedToCopy": "Failed to copy",
 
     "beneficiaryAddress": "Адрес Получателя",
@@ -417,5 +417,6 @@
     "lastEpoch": "Last Epoch",
     "currentEpoch": "Current Epoch",
     "value": "Value",
-    "blockReward": "Награда за блок"
+    "blockReward": "Награда за блок",
+    "accountLabel": "Лейбл"
 }

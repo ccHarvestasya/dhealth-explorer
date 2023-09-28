@@ -18,7 +18,7 @@
 
 import Lock from './lock';
 import helper from '../helper';
-import { NodeService, ChainService, BlockService, FinalizationService } from '../infrastructure';
+import { BlockService, ChainService, FinalizationService, NodeService } from '../infrastructure';
 const LOCK = Lock.create();
 
 export default {
@@ -138,7 +138,7 @@ export default {
 			// commit('setMarketData', { marketData, graphData });
 
 			if (nodeStats)
-				commit('setNodeStats', nodeStats.nodeTypes);
+				commit('setNodeStats', nodeStats);
 		},
 
 		async getChainInfo ({ commit }) {
@@ -158,7 +158,7 @@ export default {
 				epoch: chainInfo.latestFinalizedBlock.finalizationEpoch,
 				lastEpoch: {
 					epoch: lastEpoch,
-					age: helper.convertToUTCDate(timestamp)
+					age: helper.convertTimestampToDate(timestamp)
 				}
 			});
 		}

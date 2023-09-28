@@ -9,7 +9,7 @@
     "relativeAmount": "값",
     "height": "높이",
     "fee": "수수료",
-    "maxFee": "수수료",
+    "maxFee": "최대 수수료",
     "totalFee": "총 수수료",
     "date": "일자",
     "deadline": "마감일",
@@ -291,7 +291,7 @@
 	"aggregateCosignaturesError": "공동서명자가 유효하지 않습니다.",
 	"accountBalanceTitle": "계좌 잔고",
 	"noAlias": "명칭 없음",
-	"addressBeenCopied": "주소가 클립보드에 복사되었습니다",
+	"addressHasBeenCopied": "주소가 클립보드에 복사되었습니다",
 	"failedToCopy": "복사 실패",
 
     "beneficiaryAddress": "수혜자 주소",
@@ -416,5 +416,6 @@
     "recentNamespaces": "최근 네임스페이스",
     "lastEpoch": "마지막 Epoch",
     "currentEpoch": "현재 Epoch",
-    "value": "값"
+    "value": "값",
+    "accountLabel": "라벨"
 }

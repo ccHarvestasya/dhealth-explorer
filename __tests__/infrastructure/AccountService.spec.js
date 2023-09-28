@@ -1,10 +1,10 @@
 import { AccountService, ChainService, NamespaceService, NodeService } from '../../src/infrastructure';
 import TestHelper from '../TestHelper';
 import { restore, stub } from 'sinon';
-import { Mosaic, UInt64, MosaicId } from 'symbol-sdk';
+import { Account, Mosaic, MosaicId, NetworkType, UInt64 } from 'symbol-sdk';
 
 describe('Account Service', () => {
-	describe('getAccountInfo should', () => {
+	describe('getAccountInfo', () => {
 
 		let getAccount = {};
 		let getChainInfo = {};
@@ -20,7 +20,8 @@ describe('Account Service', () => {
 
 		it('return account', async () => {
 			// Arrange:
-			const account = TestHelper.generateAccount(1)[0];
+			const mockPrivateKey = 'C074C68DFA5E234D801E5391757CC952B6478FCF15A2E2ED6E08EE52B4015001';
+			const account = Account.createFromPrivateKey(mockPrivateKey, NetworkType.TEST_NET);
 			const mockAccountInfo = TestHelper.mockAccountInfo(account);
 
 			const mockChainInfo = {
@@ -35,7 +36,7 @@ describe('Account Service', () => {
 			const mockAccountAlias = [{
 				address: account.address.plain(),
 				names: [{
-					name: 'alias',
+					name: 'alias'
 				}]
 			}];
 
@@ -50,14 +51,30 @@ describe('Account Service', () => {
 
 			// Assert:
 			expect(accountInfo.address).toEqual(account.address.plain());
-			expect(accountInfo.votingList[0].epochInfo.epochStatus).toEqual('Current');
-			expect(accountInfo.votingList[1].epochInfo.epochStatus).toEqual('Future');
-			expect(accountInfo.votingList[2].epochInfo.epochStatus).toEqual('Expired');
 			expect(accountInfo.accountAliasNames).toEqual(['alias']);
+			expect(accountInfo.accountLabel).toEqual('Mock Exchange');
+
+			const exceptedVotingInfo = [{
+				...mockAccountInfo.supplementalPublicKeys.voting[1],
+				epochStatus: 'Current'
+			}, {
+				...mockAccountInfo.supplementalPublicKeys.voting[2],
+				epochStatus: 'Future'
+			}, {
+				...mockAccountInfo.supplementalPublicKeys.voting[0],
+				epochStatus: 'Expired'
+			}];
+
+			accountInfo.votingList.forEach((voting, index) => {
+				expect(voting.epochInfo.epochStart).toEqual(exceptedVotingInfo[index].startEpoch);
+				expect(voting.epochInfo.epochEnd).toEqual(exceptedVotingInfo[index].endEpoch);
+				expect(voting.epochInfo.epochStatus).toEqual(exceptedVotingInfo[index].epochStatus);
+				expect(voting.publicKey).toEqual(exceptedVotingInfo[index].publicKey);
+			});
 		});
 	});
 
-	describe('getAccountList should', () => {
+	describe('getAccountList', () => {
 		const pageInfo = {
 			pageNumber: 1,
 			pageSize: 10
@@ -127,6 +144,7 @@ describe('Account Service', () => {
 			accountList.data.forEach(account => {
 				expect(account).toHaveProperty('accountAliasNames');
 				expect(account).toHaveProperty('balance');
+				expect(account).toHaveProperty('accountLabel');
 			});
 		});
 
@@ -173,6 +191,64 @@ describe('Account Service', () => {
 			accountList.data.forEach(account => {
 				expect(account.balance).toEqual('0.001000');
 			});
+		});
+	});
+
+	describe('getAccountNamespaceList', () => {
+		const pageInfo = {
+			pageNumber: 1,
+			pageSize: 10
+		};
+		let searchNamespaces = {};
+		let getChainInfo = {};
+
+		beforeEach(() => {
+			searchNamespaces = stub(NamespaceService, 'searchNamespaces');
+			getChainInfo = stub(ChainService, 'getChainInfo');
+
+			getChainInfo.returns(Promise.resolve({
+				height: 1000
+			}));
+		});
+
+		afterEach(restore);
+
+		const runBasicNamespaceExpirationTests = async (namespaces, endHeight, exceptResult) => {
+			// Arrange:
+			const mockSearchAccountNamespaces = {
+				...pageInfo,
+				data: namespaces.map(namespace => {
+					return {
+						...TestHelper.mockNamespace(namespace, endHeight)
+					};
+				})
+			};
+
+			searchNamespaces.returns(Promise.resolve(mockSearchAccountNamespaces));
+
+			// Act:
+			const namespaceList = await AccountService.getAccountNamespaceList(pageInfo, {}, 'TBQ3SOJJXFO37KTGVXK7YFJYMATGJVISV2UP56I');
+
+			// Assert:
+			expect(namespaceList.pageNumber).toEqual(pageInfo.pageNumber);
+			expect(namespaceList.pageSize).toEqual(pageInfo.pageSize);
+			expect(namespaceList.data).toHaveLength(2);
+			expect(namespaceList.data[0].namespaceName).toBe(namespaces[0]);
+			expect(namespaceList.data[0].registrationType).toBe('subNamespace');
+			expect(namespaceList.data[1].namespaceName).toBe(namespaces[1]);
+			expect(namespaceList.data[1].registrationType).toBe('rootNamespace');
+			namespaceList.data.forEach(namespace => {
+				expect(namespace.expirationDuration).toBe(exceptResult);
+				expect(namespace.active).toBe('ACTIVE');
+			});
+		};
+
+		it('returns namespace expiration in infinity when native namespace', async () => {
+			runBasicNamespaceExpirationTests(['symbol.xym', 'symbol'], 0, 'INFINITY');
+		});
+
+		it('returns namespace expiration in date when non native namespace', async () => {
+			runBasicNamespaceExpirationTests(['hello.world', 'hello'], 1000, 'in a month');
 		});
 	});
 });

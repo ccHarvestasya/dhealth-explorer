@@ -42,6 +42,7 @@
 							<Harvester v-else-if="itemKey === 'harvester'" :value="item" />
 							<EpochInfoField v-else-if="itemKey === 'epochInfo'" :value="item" />
 							<MosaicFlagsField v-else-if="itemKey === 'mosaicFlags'" :value="item" />
+							<AddressField v-else-if="isAddressField(itemKey)" :itemKey="itemKey" :value="item" />
 
 							<div v-else-if="isAggregateInnerTransaction(itemKey)">
 								<b-link v-b-modal="'tlv_r'+rowIndex">Show Detail</b-link>
@@ -56,7 +57,6 @@
 								<div
 									v-if="isKeyClickable(itemKey) && getItemHref(itemKey, item)"
 									@click.stop
-									@click.prevent
 								>
 									<router-link
 										:to="getItemHref(itemKey, item)"
@@ -75,26 +75,28 @@
 					</tr>
 				</tbody>
 			</table>
-			<div v-if="pagination || timelinePagination" class="bottom">
-				<div class="pagination-wrapper">
-					<Pagination
-						:canFetchPrevious="prevPageExist"
-						:canFetchNext="nextPageExist"
-						:goUp="false"
-						:currentPageNumber="pageNumber"
-						:lastPageNumber="lastPage"
-						class="pagination"
-						@next="nextPage"
-						@previous="prevPage"
-						@firstPage="goFirstPage"
-						@lastPage="goLastPage"
-						@fetchPage="fetchPage($event)"
-					/>
-					<Loading small v-if="paginationLoading" />
-				</div>
+		</div>
+
+		<div v-else class="empty-data">{{emptyDataMessageFormatted}}</div>
+
+		<div v-if="(pagination || timelinePagination) && dataIsNotEmpty" class="bottom">
+			<div class="pagination-wrapper">
+				<Pagination
+					:canFetchPrevious="prevPageExist"
+					:canFetchNext="nextPageExist"
+					:goUp="false"
+					:currentPageNumber="pageNumber"
+					:lastPageNumber="lastPage"
+					class="pagination"
+					@next="nextPage"
+					@previous="prevPage"
+					@firstPage="goFirstPage"
+					@lastPage="goLastPage"
+					@fetchPage="fetchPage($event)"
+				/>
+				<Loading small v-if="paginationLoading" />
 			</div>
 		</div>
-		<div v-else class="empty-data">{{emptyDataMessageFormatted}}</div>
 	</div>
 </template>
 
@@ -116,6 +118,7 @@ import SoftwareVersion from '@/components/fields/SoftwareVersion.vue';
 import Harvester from '@/components/fields/Harvester.vue';
 import EpochInfoField from '@/components/fields/EpochInfoField.vue';
 import MosaicFlagsField from '@/components/fields/MosaicFlagsField.vue';
+import AddressField from '@/components/fields/AddressField.vue';
 
 export default {
 	extends: TableView,
@@ -136,7 +139,8 @@ export default {
 		SoftwareVersion,
 		Harvester,
 		EpochInfoField,
-		MosaicFlagsField
+		MosaicFlagsField,
+		AddressField
 	},
 
 	props: {
@@ -325,7 +329,10 @@ export default {
 
 <style lang="scss" scoped>
 .table-view {
-    overflow: auto;
+    .table-wrapper {
+        display: block;
+        overflow: auto;
+    }
 
     .pointer {
         cursor: pointer;
