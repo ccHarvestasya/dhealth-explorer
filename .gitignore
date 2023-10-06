@@ -27,3 +27,12 @@ src/config/setup.json
 
 # e2e screenshots
 e2e/screenshots/*
+src/config/i18n/en-us.json.bak
+src/config/i18n/es.json.bak
+src/config/i18n/ja.json.bak
+src/config/i18n/ko.json.bak
+src/config/i18n/pt.json.bak
+src/config/i18n/ru.json.bak
+src/config/i18n/ua.json.bak
+src/config/i18n/zh.json.bak
+src/config/pages/transaction-list.json.bak
